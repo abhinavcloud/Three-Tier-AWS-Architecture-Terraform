@@ -31,7 +31,8 @@ Architecture Overview
                     └──────────────────────────────────┘
                                    │
                                    ▼
-                    ┌──────────────────────────────────┐                    │         VPC Endpoint (S3)        |
+                    ┌──────────────────────────────────┐   
+                    │         VPC Endpoint (S3)        |
                     └──────────────────────────────────┘
                                    │
                                    ▼
@@ -47,39 +48,38 @@ Key Characteristics
 - Terraform state separation for Dev, Test, Staging, Prod.
 
 Module Structure
-1. Network
-    a. VPC
-    b. Subnets (public/private)
-    c. Route tables
-    d. VPC Endpoint configuration
-2. Security
-    a. Security groups for ALBs, Web EC2, App EC2
-3. Ingress
-    a. Public and Private ALB
-    b. Target Groups
-4. Compute
-    a. EC2 (Web + App)
-5. Storage
-    a. S3 bucket
-    b. Bucket policy
+1. Network -  VPC, Subnets (public/private), Route tables, VPC Endpoint configuration
+2. Security - Security groups for ALBs, Web EC2, App EC2
+3. Ingress - Public and Private ALB, Target Groups
+4. Compute - EC2 (Web + App)
+5. Storage - S3 bucket, Bucket policy
 
 
 Environment Layout
-Environments/
+Environments
+
  ├── Dev
+ 
  ├── Test
+ 
  ├── Staging
+ 
  └── Production
 
 Each environment includes:
+
 - Own variable definitions
+  
 - Dedicated remote state backend
+  
 - Pinned module versions
+  
 - Isolated deployment lifecycle
 
 
 Application Flow
-1.  User accesses Public ALB.
+
+1. User accesses Public ALB.
 2. Web EC2 serves frontend and forwards API calls to Private ALB.
 3. App EC2 reads/writes tasks.json stored inside S3.
 4. All S3 traffic stays inside VPC.
@@ -103,21 +103,37 @@ Project Structure
 modules/
 
  ├── Compute/
+ 
       ├── EC2/
+      
  ├── Ingress/
+ 
       ├── ALB/
+      
       ├── Target_Group/
+      
  ├── Network/
+ 
       ├── VPC/
+      
       ├── Subnets/
+      
       └── Route_tables/
+      
  ├── Security_Groups/
+ 
  ├── Storage/
+ 
       └── S3/
+      
  ├── Environments/
+ 
      ├── Dev/
+     
      ├── Test/
+     
      ├── Staging/
+     
      └── Production/
  
 
