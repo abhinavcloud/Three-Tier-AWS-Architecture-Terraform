@@ -1,0 +1,37 @@
+name: Deployment of AWS Three Tier Architecture
+
+description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
+
+on: 
+    push:
+        branches:
+            - master
+        paths:
+            - /Evironments/Dev/**
+            - /Compute/**
+            - /Ingress/**
+            - /Network/**
+            - /Security_Groups/**
+            - /Storage/**
+
+    workflow_dispatch:
+
+jobs:
+    terraform-plan:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Setup-terraform
+              uses: hashicorp/setup-terraform@v4
+
+            - name: Initialise-Terraform
+              run: terraform init
+
+            - name: Checkout-code
+              uses: actions/checkout@v3
+
+
+
+        
+        
+     
