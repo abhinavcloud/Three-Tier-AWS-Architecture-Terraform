@@ -15,8 +15,8 @@ on:
     workflow_dispatch:
 
 permissions:
-  - read
-  - write
+  id-token: write
+  contents: read
 
 jobs:
     terraform-plan:
