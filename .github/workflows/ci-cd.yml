@@ -50,7 +50,6 @@ jobs:
               run: terraform plan -out=tfplan
 
             - name: upload-tfplan-artifact
-              needs: terraform-plan 
               uses: actions/upload-artifact@v4
               with:
                 name: tfplan
