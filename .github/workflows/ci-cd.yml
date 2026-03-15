@@ -6,13 +6,7 @@ on:
     push:
         branches:
             - master
-        paths:
-            - /Environments/Dev/**
-            - /Compute/**
-            - /Ingress/**
-            - /Network/**
-            - /Security_Groups/**
-            - /Storage/**
+
         paths-ignore:
             - /Environments/Test/**
             - /Environments/Staging/**
