@@ -49,11 +49,12 @@ jobs:
             - name: terraform-plan
               run: terraform plan -out=tfplan
 
-            - name: uppload-tfplan-artifact
+            - name: upload-tfplan-artifact
+              needs: terraform-plan 
               uses: actions/upload-artifact@v4
               with:
                 name: tfplan
-                path: tfplan
+                path: .
                 if-no-files-found: error
 
             
