@@ -3,7 +3,7 @@
 
 #Create a resource Block for Target Group with health checks for unhealthy instances
 resource "aws_lb_target_group" "web_target_group" {
-  name     = "tg-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+  name     = "tg-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
   port     = 80
   protocol = "HTTP"
   vpc_id   = var.vpc_id 
@@ -20,14 +20,14 @@ resource "aws_lb_target_group" "web_target_group" {
     tags = merge(
     var.common_tags,
     {       
-      Name = "tg-web-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "tg-web-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
     )
 }
 
 #Create a target group for internal private ALB and instances in private subnet
 resource "aws_lb_target_group" "app_target_group" {
-  name     = "tg-app-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-ws${terraform.workspace}"
+  name     = "tg-app-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
   port     = 8080
   protocol = "HTTP"
   vpc_id   = var.vpc_id 
@@ -44,7 +44,7 @@ resource "aws_lb_target_group" "app_target_group" {
     tags = merge(
     var.common_tags,
     {
-      Name = "tg-app-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "tg-app-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
     )
 }    

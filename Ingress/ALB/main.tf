@@ -3,7 +3,7 @@
 
 # Create a resource block for to create a Public ALB 
 resource "aws_lb" "application_lb" {
-  name               = "lb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+  name               = "lb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.alb_security_group_id]
@@ -12,7 +12,7 @@ resource "aws_lb" "application_lb" {
   tags = merge(
     var.common_tags,
     {       
-      Name = "alb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "alb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
   )
 }
@@ -30,7 +30,7 @@ resource "aws_lb_listener" "http_listener" {
   tags = merge(
     var.common_tags,
     {       
-      Name = "alb-listener-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "alb-listener-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
   )     
 
@@ -38,7 +38,7 @@ resource "aws_lb_listener" "http_listener" {
 
 #Create a private alb for app target group using the private alb security group
 resource "aws_lb" "private_application_lb" {
-  name               = "pvt-lb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-ws-${terraform.workspace}"
+  name               = "pvt-lb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
   internal           = true
   load_balancer_type = "application"
   security_groups    = [var.private_alb_security_group_id]
@@ -46,7 +46,7 @@ resource "aws_lb" "private_application_lb" {
   tags = merge(
     var.common_tags,
     {       
-      Name = "private-alb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "private-alb-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
   )
 }
@@ -64,7 +64,7 @@ resource "aws_lb_listener" "private_http_listener" {
   tags = merge(
     var.common_tags,
     {       
-      Name = "private-alb-listener-${var.common_tags["Environment"]}-${var.common_tags["Application"]}-workspace-${terraform.workspace}"
+      Name = "private-alb-listener-${var.common_tags["Environment"]}-${var.common_tags["Application"]}"
     } 
   )     
 
