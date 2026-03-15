@@ -12,7 +12,11 @@ on:
             - /Environments/Staging/**
             - /Environments/Production/**
 
-    workflow_dispatch:
+    workflow_dispatch:4
+
+permissions:
+  - read
+  - write
 
 jobs:
     terraform-plan:
