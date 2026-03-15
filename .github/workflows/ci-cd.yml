@@ -22,6 +22,12 @@ jobs:
     terraform-plan:
         runs-on: ubuntu-latest
 
+        environment: dev
+
+        defaults:
+          run:
+            working-directory: ${{var.TF_Enviroment}}
+
         steps:
             - name: Checkout-code
               uses: actions/checkout@v3
@@ -36,6 +42,21 @@ jobs:
               uses: hashicorp/setup-terraform@v4
               with:
                 terraform_version: ">= 1.13.0"
+
+            - name: terraform-init
+              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+
+            - name: terraform-plan
+              run: terraform plan -out=tfplan
+
+            - name: uppload-tfplan-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: tfplan
+                path: tfplan
+                if-no-files-found: error
+
+            
               
 
 
