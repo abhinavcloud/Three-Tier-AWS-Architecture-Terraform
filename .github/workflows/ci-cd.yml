@@ -111,7 +111,7 @@ jobs:
                   exit 1
                 
             - name: check-drift-result-no-drift
-              if: ${{steps.drift-check.outcoume == "success"}}
+              if: ${{steps.drift-check.outcoume}} == "success"
               run: |
                   echo "Terraform Plan Execution Success. No Drift Detected"
                   exit 0
