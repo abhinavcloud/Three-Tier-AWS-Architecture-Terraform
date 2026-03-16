@@ -51,7 +51,7 @@ jobs:
 
             - name: terraform-plan-show
               run: |
-                    terraform show -json tfplan | jq '.' > tfplan.txt
+                    terraform show tfplan > tfplan.txt
 
 
             - name: upload-tfplan-artifact
@@ -60,6 +60,74 @@ jobs:
                 name: tfplan
                 path: ./Environments/Dev/tfplan.txt
                 if-no-files-found: error
+
+
+    terraform-drift-check:
+
+      runs-on: ubuntu-latest
+
+      environment: dev
+
+      defaults:
+          run:
+            working-directory: ${{vars.TF_ENVIRONMENT}}
+
+          steps:
+            - name: Checkout-code
+              uses: actions/checkout@v3
+
+            - name: Setup-aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::806685982094:role/GitHubAuthentication
+                aws-region: ap-south-1
+            
+            - name: setup-terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                terraform_version: ">= 1.13.0"
+
+            - name: terraform-init
+              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+
+            - name: terraform-plan
+              run: terraform plan -out=tfplan
+
+            - name: terraform-plan-show
+              run: |
+                    terraform show  tfplan > tfplan.md
+
+            - name: terraform-plan-drift-check
+              id: drift-check
+              run: terraform plan -detailed-exitcode
+              continnue-on-error: true
+
+            - name: check-drift-result
+              run: |
+                if [ "${{steps.drift-check.outcome}}" == "failure" ]; then
+                  echo "Terraform Plan Execution Failed"
+                  exit 1
+                fi
+
+                if [ "${{steps.drift-check.outcome}}"] == "success"]; then
+                  echo "Terraform Plan Execution Success. No Drift Detected"
+                  exit 0
+                fi
+
+                if [ "${{steps.drift-check.outcome}}" == "success "] && ["${{steps.drift-check.exitcode}}" == "2"]; then
+                  echo "Drift Detected. Please review changes "
+                  exit 2
+                fi
+
+            - name: create-issue-if-drift-detected
+              if:  ${{steps.drift-check.outcome}} == "success" && ${{steps.drift-check.exitcode}} == "2"
+              uses: peter-evans/create-issue-from-file$v5
+              with:
+                title: "Terraform Drift Detected on Dev Environment"
+                content-filepath: tfplan.md 
+                labels: drift, dev-environment
+
+
 
             
               
