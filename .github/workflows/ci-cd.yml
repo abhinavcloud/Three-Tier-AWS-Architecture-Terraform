@@ -21,4 +21,6 @@ permissions:
 jobs:
     terraform-plan:
         uses: ./.github/workflows/reusable-terraform-plan.yml
+        with:
+          execution-environment: dev
 
