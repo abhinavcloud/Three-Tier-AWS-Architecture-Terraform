@@ -5,9 +5,10 @@ description: This is a reusable workflow designed to initialise terraform and ru
 on:
   workflow_call:
 
-  inputs:
-    execution-environment:
-      required: true
+    inputs:
+       execution-environment:
+         required: true
+         type: string
 
 jobs:
     terraform-plan-reusable:
