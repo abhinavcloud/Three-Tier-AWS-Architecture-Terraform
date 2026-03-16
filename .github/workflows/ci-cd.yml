@@ -99,6 +99,13 @@ jobs:
               run: |
                     terraform show  tfplan > tfplan.md
 
+            - name: upload-tfplan-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: tfplan
+                path: ./Environments/Dev/tfplan.md
+                if-no-files-found: error
+
             - name: terraform-plan-drift-check
               id: drift-check
               run: terraform plan -detailed-exitcode
