@@ -12,9 +12,7 @@ on:
 
       outputs:
         drift-check:
-          required: true
-          type: string
-          values: ${{jobs.terraform-drift-check.outputs.drift-check}}
+          value: ${{jobs.terraform-drift-check.outputs.drift-check}}
 
 
 
