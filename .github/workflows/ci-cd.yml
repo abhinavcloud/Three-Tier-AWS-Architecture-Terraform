@@ -51,8 +51,7 @@ jobs:
 
             - name: terraform-plan-show
               run: |
-                    terraform show tfplan > tfplan.json
-                    cat tfplan.json | jq . > tfplan.txt
+                    terraform show -json tfplan | jq '.resource_changes[].change.actions' > tfplan.txt
 
 
             - name: upload-tfplan-artifact
