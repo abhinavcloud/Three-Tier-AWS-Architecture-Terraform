@@ -72,7 +72,7 @@ jobs:
           run:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
-      needs: terrform-plan
+      needs: terraform-plan
 
       steps:
             - name: Checkout-code
