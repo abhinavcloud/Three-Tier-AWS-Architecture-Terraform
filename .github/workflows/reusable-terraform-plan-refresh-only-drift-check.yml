@@ -34,8 +34,6 @@ jobs:
 
       outputs:
         drift-check:
-          required: true
-          type: string
           values: ${{steps.drift-check.outputs.exitcode}}
 
       steps:
