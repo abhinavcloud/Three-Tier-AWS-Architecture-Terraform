@@ -20,11 +20,5 @@ permissions:
 
 jobs:
     terraform-plan:
-        runs-on: ubuntu-latest
+        uses: ./.github/workflows/reusable-terraform-plan.yml
 
-        steps:
-            - name: Checkout-code
-              uses: actions/checkout@v3
-
-            - name: reusable-terraform-plan
-              uses: ./.github/workflows/reusable-terraform-plan.yml
