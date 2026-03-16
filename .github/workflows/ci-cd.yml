@@ -72,6 +72,8 @@ jobs:
           run:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
+      needs: terrform-plan
+
       steps:
             - name: Checkout-code
               uses: actions/checkout@v3
@@ -104,17 +106,17 @@ jobs:
 
             - name: check-drift-result
               run: |
-                if [ "${{steps.drift-check.outcome}}" == "failure" ]; then
+                if  ${{steps.drift-check.outcome}} == "failure" ; then
                   echo "Terraform Plan Execution Failed"
                   exit 1
                 fi
 
-                if [ "${{steps.drift-check.outcome}}"] == "success"]; then
+                if ${{steps.drift-check.outcome}} == "success"]; then
                   echo "Terraform Plan Execution Success. No Drift Detected"
                   exit 0
                 fi
 
-                if [ "${{steps.drift-check.outcome}}" == "success "] && ["${{steps.drift-check.exitcode}}" == "2"]; then
+                if ${{steps.drift-check.outcome}}" == "success " && "${{steps.drift-check.exitcode}}" == "2"; then
                   echo "Drift Detected. Please review changes "
                   exit 2
                 fi
