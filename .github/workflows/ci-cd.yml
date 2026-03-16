@@ -123,7 +123,7 @@ jobs:
 
 
             - name: create-issue-if-drift-detected
-              if:  ${{steps.drift-check.outcome == 'success'}} && ${{steps.drift-check.exitcode == '2'}}
+              if:  ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"
