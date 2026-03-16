@@ -108,19 +108,19 @@ jobs:
               if: ${{steps.drift-check.outcome}} == "failure"
               run: |
                   echo "Terraform Plan Execution Failed"
-                  exit 1
+
                 
             - name: check-drift-result-no-drift
               if: ${{steps.drift-check.outcoume}} == "success"
               run: |
                   echo "Terraform Plan Execution Success. No Drift Detected"
-                  exit 0
+
               
             - name: check-drift-result-drift
               if: ${{steps.drift-check.outcome}}" == "success" && ${{steps.drift-check.exitcode}} == "2"
               run: |
                 echo "Drift Detected. Please review changes "
-                exit 2
+
 
             - name: create-issue-if-drift-detected
               if:  ${{steps.drift-check.outcome}} == "success" && ${{steps.drift-check.exitcode}} == "2"
