@@ -5,7 +5,22 @@ description: This deployment pipeline is used for deployment of AWS Three Tier A
 on: 
     workflow_call:
 
+      inputs:
+        execution-environment:
+          required: true
+          type: string
 
+      outputs:
+        drift-check:
+          required: true
+          type: string
+          values: ${{jobs.terraform-drift-check.outputs.drift-check}}
+
+
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
     
@@ -13,13 +28,17 @@ jobs:
 
       runs-on: ubuntu-latest
 
-      environment: dev
+      environment: ${{inputs.execution-environment}}
 
       defaults:
           run:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
-      needs: terraform-plan
+      outputs:
+        drift-check:
+          required: true
+          type: string
+          values: ${{steps.drift-check.outputs.exitcode}}
 
       steps:
  
@@ -37,24 +56,24 @@ jobs:
             - name: terraform-init
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
 
-            - name: terraform-plan
-              run: terraform plan -out=tfplan
+            - name: terraform-plan-drift-check
+              id: drift-check
+              run: |
+                terraform plan -refresh-only -detailed-exitcode -out=drift-tfplan
+                echo "exitcode=$?" >> $GITHUB_OUTPUT
+              continue-on-error: true
 
             - name: terraform-plan-show
               run: |
-                    terraform show  tfplan > tfplan.md
+                    terraform show  drift-tfplan > drift-tfplan.md
 
             - name: upload-tfplan-artifact
               uses: actions/upload-artifact@v4
               with:
-                name: tfplan-md
-                path: ./Environments/Dev/tfplan.md
+                name: drift-tfplan-md
+                path: ./Environments/Dev/drift-tfplan.md
                 if-no-files-found: error
 
-            - name: terraform-plan-drift-check
-              id: drift-check
-              run: terraform plan -refresh-only -detailed-exitcode
-              continue-on-error: true
 
             - name: check-drift-result-plan-fail
               if: ${{steps.drift-check.outcome == 'failure'}}

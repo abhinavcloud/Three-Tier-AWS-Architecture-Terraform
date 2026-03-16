@@ -5,7 +5,15 @@ description: This deployment pipeline is used for deployment of AWS Three Tier A
 on: 
     workflow_call:
 
+    inputs:
+      execution-environment:
+        required: true
+        type: string
 
+
+permissions:
+  id-token: write
+  contents: read
 
 jobs:
     
@@ -13,7 +21,7 @@ jobs:
 
       runs-on: ubuntu-latest
 
-      environment: dev
+      environment: ${{inputs.execution-environment}}
 
       defaults:
           run:
@@ -76,6 +84,7 @@ jobs:
 
             - name: create-issue-if-drift-detected
               if:  ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
+              uses: actions/download-artifact
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"
