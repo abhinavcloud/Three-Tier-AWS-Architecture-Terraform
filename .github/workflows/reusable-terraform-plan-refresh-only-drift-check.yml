@@ -34,7 +34,7 @@ jobs:
 
       outputs:
         drift-check:
-          values: ${{steps.drift-check.outputs.exitcode}}
+          value: ${{steps.drift-check.outputs.exitcode}}
 
       steps:
  
