@@ -100,7 +100,7 @@ jobs:
             - name: terraform-plan-drift-check
               id: drift-check
               run: terraform plan -detailed-exitcode
-              continnue-on-error: true
+              continue-on-error: true
 
             - name: check-drift-result
               run: |
