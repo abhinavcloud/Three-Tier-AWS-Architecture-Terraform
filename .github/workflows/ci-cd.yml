@@ -57,7 +57,7 @@ jobs:
             - name: upload-tfplan-artifact
               uses: actions/upload-artifact@v4
               with:
-                name: tfplan
+                name: tfplan-txt
                 path: ./Environments/Dev/tfplan.txt
                 if-no-files-found: error
 
@@ -102,7 +102,7 @@ jobs:
             - name: upload-tfplan-artifact
               uses: actions/upload-artifact@v4
               with:
-                name: tfplan
+                name: tfplan-md
                 path: ./Environments/Dev/tfplan.md
                 if-no-files-found: error
 
