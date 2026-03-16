@@ -104,25 +104,26 @@ jobs:
               run: terraform plan -detailed-exitcode
               continue-on-error: true
 
-            - name: check-drift-result
+            - name: check-drift-result-plan-fail
+              if: ${{steps.drift-check.outcome}} == "failure"
               run: |
-                if  ${{steps.drift-check.outcome}} == "failure" ; then
                   echo "Terraform Plan Execution Failed"
                   exit 1
-                fi
-
-                if ${{steps.drift-check.outcome}} == "success"; then
+                
+            - name: check-drift-result-no-drift
+              if: ${{steps.drift-check.outcoume == "success"}}
+              run: |
                   echo "Terraform Plan Execution Success. No Drift Detected"
                   exit 0
-                fi
+              
+            - name: check-drift-result-drift
+              if: ${{steps.drift-check.outcome}}" == "success" && ${{steps.drift-check.exitcode}} == "2"
+              run: |
+                echo "Drift Detected. Please review changes "
+                exit 2
 
-                if ${{steps.drift-check.outcome}}" == "success" && "${{steps.drift-check.exitcode}}" == "2"; then
-                  echo "Drift Detected. Please review changes "
-                  exit 2
-                fi
-
-            - name: create-issue-if-drift-detected
-              if:  (${{steps.drift-check.outcome}} == "success" && ${{steps.drift-check.exitcode}} == "2")
+                - name: create-issue-if-drift-detected
+              if:  ${{steps.drift-check.outcome}} == "success" && ${{steps.drift-check.exitcode}} == "2"
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"
