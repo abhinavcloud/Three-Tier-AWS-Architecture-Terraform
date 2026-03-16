@@ -33,8 +33,7 @@ jobs:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
       outputs:
-        drift-check:
-          value: ${{steps.drift-check.outputs.exitcode}}
+        drift-check: ${{steps.drift-check.outputs.exitcode}}
 
       steps:
  
