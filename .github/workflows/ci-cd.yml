@@ -27,4 +27,4 @@ jobs:
               uses: actions/checkout@v3
 
             - name: reusable-terraform-plan
-              uses: ./.github/workflows/reusable-workflows/terraform-plan.yml
+              uses: ./.github/workflows/reusable-terraform-plan.yml
