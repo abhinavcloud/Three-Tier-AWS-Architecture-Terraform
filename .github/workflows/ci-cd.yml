@@ -122,7 +122,7 @@ jobs:
                 echo "Drift Detected. Please review changes "
                 exit 2
 
-                - name: create-issue-if-drift-detected
+            - name: create-issue-if-drift-detected
               if:  ${{steps.drift-check.outcome}} == "success" && ${{steps.drift-check.exitcode}} == "2"
               uses: peter-evans/create-issue-from-file@v5
               with:
