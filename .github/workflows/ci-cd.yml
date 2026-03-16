@@ -117,7 +117,7 @@ jobs:
 
               
             - name: check-drift-result-drift
-              if: ${{steps.drift-check.outcome" == 'success'}} && ${{steps.drift-check.exitcode == '2'}}
+              if: ${{steps.drift-check.outcome == 'success'}} && ${{steps.drift-check.exitcode == '2'}}
               run: |
                 echo "Drift Detected. Please review changes "
 
