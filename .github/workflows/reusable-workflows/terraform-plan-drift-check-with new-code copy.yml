@@ -1,0 +1,97 @@
+name: Deployment of AWS Three Tier Architecture
+
+description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
+
+on: 
+    workflow_call:
+
+
+
+jobs:
+    
+    terraform-drift-check:
+
+      runs-on: ubuntu-latest
+
+      environment: dev
+
+      defaults:
+          run:
+            working-directory: ${{vars.TF_ENVIRONMENT}}
+
+      needs: terraform-plan
+
+      steps:
+
+            - name: Setup-aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::806685982094:role/GitHubAuthentication
+                aws-region: ap-south-1
+            
+            - name: setup-terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                terraform_version: ">= 1.13.0"
+
+            - name: terraform-init
+              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+
+            - name: terraform-plan
+              run: terraform plan -out=tfplan
+
+            - name: terraform-plan-show
+              run: |
+                    terraform show  tfplan > tfplan.md
+
+            - name: upload-tfplan-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: tfplan-md
+                path: ./Environments/Dev/tfplan.md
+                if-no-files-found: error
+
+            - name: terraform-plan-drift-check
+              id: drift-check
+              run: terraform plan -detailed-exitcode
+              continue-on-error: true
+
+            - name: check-drift-result-plan-fail
+              if: ${{steps.drift-check.outcome == 'failure'}}
+              run: |
+                  echo "Terraform Plan Execution Failed"
+
+                
+            - name: check-drift-result-no-drift
+              if: ${{steps.drift-check.outcome == 'success'}}
+              run: |
+                  echo "Terraform Plan Execution Success. No Drift Detected"
+
+              
+            - name: check-drift-result-drift
+              if: ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
+              run: |
+                echo "Drift Detected. Please review changes "
+
+
+            - name: create-issue-if-drift-detected
+              if:  ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
+              uses: peter-evans/create-issue-from-file@v5
+              with:
+                title: "Terraform Drift Detected on Dev Environment"
+                content-filepath: tfplan.md 
+                labels: drift, dev-environment
+
+
+
+            
+              
+
+
+
+
+
+
+        
+        
+     
