@@ -52,13 +52,10 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: tfplan
-                path: ./Environments/Dev/tfplan.txt
+                path: ${{ vars.TF_ENVIRONMENT }}/tfplan.txt
                 if-no-files-found: error
 
             - name: terraform-apply
               id: terraform-apply
               run: terraform apply tfplan -auto-approve
 
-            - name: terraform-destroy
-              if: ${{steps.terraform-apply.outcome == 'success'}}
-              run: terraform destroy -auto-approve

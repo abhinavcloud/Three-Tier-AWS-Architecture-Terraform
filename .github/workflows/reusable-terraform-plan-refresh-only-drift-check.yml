@@ -71,7 +71,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: drift-tfplan-md
-                path: drift-tfplan.md
+                path: ${{ vars.TF_ENVIRONMENT }}/drift-tfplan.md
                 if-no-files-found: error
 
             - name: if-drift-plan-failed
@@ -92,7 +92,7 @@ jobs:
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"
-                content-filepath: drift-tfplan.md 
+                content-filepath: ${{ vars.TF_ENVIRONMENT }}/drift-tfplan.md
                 labels: drift, dev-environment
 
 

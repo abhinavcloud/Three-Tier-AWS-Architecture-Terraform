@@ -6,9 +6,9 @@ on:
   workflow_call:
 
     inputs:
-       execution-environment:
-         required: true
-         type: string
+        execution-environment:
+          required: true
+          type: string
 
 jobs:
     terraform-plan-reusable:
