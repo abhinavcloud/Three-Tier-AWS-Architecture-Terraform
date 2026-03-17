@@ -57,5 +57,5 @@ jobs:
 
             - name: terraform-apply
               id: terraform-apply
-              run: terraform apply tfplan -auto-approve
+              run: terraform apply tfplan 
 
