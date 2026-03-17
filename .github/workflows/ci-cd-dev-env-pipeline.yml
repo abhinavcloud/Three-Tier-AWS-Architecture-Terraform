@@ -25,13 +25,8 @@ jobs:
             execution-environment: dev
 
     run-plan-if-no-drift:
-       
-        runs-on: ubuntu-latest
-
         needs: terraform-plan-drift-check
-
         if: ${{needs.terraform-plan-drift.check.outputs.drift-check == '0'}}
-
         uses: ./.github/workflows/reusable-terraform-plan.yml
         with:
             execution-environment: dev
