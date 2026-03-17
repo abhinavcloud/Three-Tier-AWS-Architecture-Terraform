@@ -51,13 +51,9 @@ jobs:
             - name: terraform-init
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
 
-            - name: terraform-plan-drift-check
-              id: drift-check
-              run: |
-                terraform plan -refresh-only -detailed-exitcode -out=drift-tfplan
-                echo "exitcode=$?" >> $GITHUB_OUTPUT
-              continue-on-error: true
-
+            - name: terraform-plan-refresh
+              run: terraform plan -reresh-only -out=drift-tfplan
+            
             - name: terraform-plan-show
               run: |
                     terraform show  drift-tfplan > drift-tfplan.md
@@ -69,43 +65,34 @@ jobs:
                 path: ./Environments/Dev/drift-tfplan.md
                 if-no-files-found: error
 
-
-            - name: check-drift-result-plan-fail
-              if: ${{steps.drift-check.outcome == 'failure'}}
+            - name: terraform-plan-drift-check
+              id: drift-check
               run: |
-                  echo "Terraform Plan Execution Failed"
+                terraform plan -refresh-only -detailed-exitcode -out=drift-tfplan
+                echo "exitcode=$?" >> $GITHUB_OUTPUT
+              continue-on-error: true
 
-                
-            - name: check-drift-result-no-drift
-              if: ${{steps.drift-check.outcome == 'success'}}
+
+
+            - name: if-drift-plan-failed
+              if: ${{steps.drift-check.outputs.drift-check == '1'}}
               run: |
-                  echo "Terraform Plan Execution Success. No Drift Detected"
-
-              
-            - name: check-drift-result-drift
-              if: ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
+                echo " Plan execution failed"
+                exit 1
+            
+            - name: if-no-drift-detected
+              id: no-drift-detected
+              if : ${{steps.drift-check.outputs.drift-check == '0'}}
               run: |
-                echo "Drift Detected. Please review changes "
-
-
-            - name: create-issue-if-drift-detected
-              if:  ${{steps.drift-check.outcome == 'success' && steps.drift-check.exitcode == '2'}}
+                echo " No drift detected. Continue to plan"
+            
+           
+            - name: if-drift-detected-then-create-issue
+              if: ${{steps.drift-check.outputs.drift-check == '2'}}
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"
-                content-filepath: tfplan.md 
+                content-filepath: drift-tfplan.md 
                 labels: drift, dev-environment
 
 
-
-            
-              
-
-
-
-
-
-
-        
-        
-     

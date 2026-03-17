@@ -24,38 +24,19 @@ jobs:
         with:
             execution-environment: dev
 
-    decide-drift-action:
+    run-plan-if-no-drift:
        
         runs-on: ubuntu-latest
 
         needs: terraform-plan-drift-check
 
-        steps:
-            - name: if-drift-plan-failed
-              if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '1'}}
-              run: |
-                echo " Plan execution failed"
-                exit 1
-            
-            - name: if-no-drift-detected
-              id: no-drift-detected
-              if : ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
-              run: |
-                echo " No drift detected. Continue to plan"
-            
-            - name: if-drift-detected-then-download-drift-plan
-              if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '2'}}
-              uses: actions/download-artifact@v4
-              with:
-                name: drift-tfplan-md
-            
-            - name: if-drift-detected-then-create-issue
-              if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '2'}}
-              uses: peter-evans/create-issue-from-file@v5
-              with:
-                title: "Terraform Drift Detected on Dev Environment"
-                content-filepath: tfplan.md 
-                labels: drift, dev-environment
+        if: ${{needs.terraform-plan-drift.check.outputs.drift-check == '0'}}
+
+        uses: ./.github/workflows/reusable-terraform-plan.yml
+        with:
+            execution-environment: dev
+
+
 
 
 
