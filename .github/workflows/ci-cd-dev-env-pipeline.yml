@@ -50,6 +50,23 @@ jobs:
         with:
             execution-environment: dev
 
+    terraform-check-resources:
+        needs: terraform-plan-apply-if-no-drift && terraform-destroy
+        run: |
+            terraform show state > state-file.txt
+            cat state-file.txt
+
+    terraform-state-artifact:
+        needs: terraform-check-resources
+        uses: actions/upload-artifact@v4
+        with:
+            name: state-file-after-destory
+            path: Environment/Dev/state-file.txt
+            if-no-files-found: error
+
+
+    
+
 
 
 
