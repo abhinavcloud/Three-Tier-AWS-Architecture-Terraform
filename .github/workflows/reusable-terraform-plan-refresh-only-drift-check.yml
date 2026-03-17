@@ -19,6 +19,7 @@ on:
 permissions:
   id-token: write
   contents: read
+  issues: write
 
 jobs:
     
@@ -53,10 +54,15 @@ jobs:
 
             - name: terraform-init
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
-
-            - name: terraform-plan-refresh
-              run: terraform plan -refresh-only -out=drift-tfplan
             
+            
+            - name: terraform-plan-drift-check
+              id: drift-check
+              run: |
+                terraform plan -refresh-only -detailed-exitcode -out=drift-tfplan
+                echo "exitcode=$?" >> $GITHUB_OUTPUT
+              continue-on-error: true
+
             - name: terraform-plan-show
               run: |
                     terraform show  drift-tfplan > drift-tfplan.md
@@ -65,33 +71,24 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: drift-tfplan-md
-                path: ./Environments/Dev/drift-tfplan.md
+                path: drift-tfplan.md
                 if-no-files-found: error
 
-            - name: terraform-plan-drift-check
-              id: drift-check
-              run: |
-                terraform plan -refresh-only -detailed-exitcode -out=drift-tfplan
-                echo "exitcode=$?" >> $GITHUB_OUTPUT
-              continue-on-error: true
-
-
-
             - name: if-drift-plan-failed
-              if: ${{steps.drift-check.outputs.drift-check == '1'}}
+              if: ${{steps.drift-check.outputs.exitcode == '1'}}
               run: |
                 echo " Plan execution failed"
                 exit 1
             
             - name: if-no-drift-detected
               id: no-drift-detected
-              if : ${{steps.drift-check.outputs.drift-check == '0'}}
+              if : ${{steps.drift-check.outputs.exitcode == '0'}}
               run: |
                 echo " No drift detected. Continue to plan"
             
            
             - name: if-drift-detected-then-create-issue
-              if: ${{steps.drift-check.outputs.drift-check == '2'}}
+              if: ${{steps.drift-check.outputs.exitcode == '2'}}
               uses: peter-evans/create-issue-from-file@v5
               with:
                 title: "Terraform Drift Detected on Dev Environment"

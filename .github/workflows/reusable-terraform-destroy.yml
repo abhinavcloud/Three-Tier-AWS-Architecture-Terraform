@@ -1,0 +1,44 @@
+name: Reusable workflow of Terraform Plan
+
+description: This is a reusable workflow designed to initialise terraform and run terraform plan and upload the plan as an artifact
+
+on:
+  workflow_call:
+
+    inputs:
+       execution-environment:
+         required: true
+         type: string
+
+jobs:
+    terraform-plan-reusable:
+        runs-on: ubuntu-latest
+
+        environment: ${{inputs.execution-environment}}
+        
+
+        defaults:
+          run:
+            working-directory: ${{vars.TF_ENVIRONMENT}}
+
+        steps:
+
+            - name: Checkout-code
+              uses: actions/checkout@v3
+
+            - name: Setup-aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: arn:aws:iam::806685982094:role/GitHubAuthentication
+                aws-region: ap-south-1
+            
+            - name: setup-terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                terraform_version: ">= 1.13.0"
+
+            - name: terraform-init
+              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+
+            - name: terraform-destroy
+              run: terraform destroy -auto-approve

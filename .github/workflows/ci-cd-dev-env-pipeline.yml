@@ -17,6 +17,13 @@ on:
 permissions:
   id-token: write
   contents: read
+  issues: write
+
+
+concurrency:
+  group: terraform-dev
+  cancel-in-progress: false
+
 
 jobs:
     terraform-plan-drift-check:
@@ -24,13 +31,19 @@ jobs:
         with:
             execution-environment: dev
 
-    run-plan-if-no-drift:
+    terraform-plan-apply-if-no-drift:
         needs: terraform-plan-drift-check
-        if: ${{needs.terraform-plan-drift.check.outputs.drift-check == '0'}}
-        uses: ./.github/workflows/reusable-terraform-plan.yml
+        if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
+        uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
             execution-environment: dev
 
+    terrafrom-destroy:
+        needs: terraform-plan-apply-if-no-drift
+        if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
+        uses: ./.github/workflows/reusable-terraform-plan-apply.yml
+        with:
+            execution-environment: dev
 
 
 
