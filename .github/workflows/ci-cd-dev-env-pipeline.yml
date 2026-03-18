@@ -33,7 +33,7 @@ concurrency:
 jobs:
     
     terraform-plan-drift-check:
-        uses: ./.github/workflows/reusable-terraform-plan-refresh-only-drift-check.yml
+        uses: ./.github/workflows/reusable-terraform-plan-drift-check.yml
         with:
             execution-environment: dev
         secrets: inherit
