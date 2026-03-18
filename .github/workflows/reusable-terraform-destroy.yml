@@ -11,7 +11,7 @@ on:
           type: string
 
 jobs:
-    terraform-plan-reusable:
+    terraform-destroy-reusable:
         runs-on: ubuntu-latest
 
         environment: ${{inputs.execution-environment}}

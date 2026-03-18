@@ -11,7 +11,7 @@ on:
           type: string
 
 jobs:
-    terraform-plan-reusable:
+    terraform-show-state:
         runs-on: ubuntu-latest
 
         environment: ${{inputs.execution-environment}}
@@ -41,7 +41,7 @@ jobs:
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
             - name: check-resources
               run: |
-                terraform show state > state-file.txt
+                terraform show list > state-file.txt
                 cat state-file.txt
              
 
