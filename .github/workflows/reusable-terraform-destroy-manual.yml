@@ -11,6 +11,11 @@ on:
           type: string
           default: dev
 
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+
 jobs:
     terraform-destroy-manual:
         runs-on: ubuntu-latest
