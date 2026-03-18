@@ -21,6 +21,8 @@ permissions:
   contents: read
   issues: write
 
+  #comment
+
 jobs:
     
     terraform-drift-check:
