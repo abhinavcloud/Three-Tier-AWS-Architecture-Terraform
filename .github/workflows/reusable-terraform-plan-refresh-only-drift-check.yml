@@ -44,7 +44,7 @@ jobs:
             - name: Setup-aws
               uses: aws-actions/configure-aws-credentials@v4
               with:
-                role-to-assume: arn:aws:iam::806685982094:role/GitHubAuthentication
+                role-to-assume: ${{secrets.AWS_ARN}}
                 aws-region: ap-south-1
             
             - name: setup-terraform

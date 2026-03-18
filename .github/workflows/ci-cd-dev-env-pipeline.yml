@@ -35,6 +35,7 @@ jobs:
         uses: ./.github/workflows/reusable-terraform-plan-refresh-only-drift-check.yml
         with:
             execution-environment: dev
+        secrets: inherit
 
     terraform-plan-apply-if-no-drift:
         needs: terraform-plan-drift-check
@@ -42,6 +43,7 @@ jobs:
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
             execution-environment: dev
+        secrets: inherit
 
     terraform-destroy:
         needs: terraform-plan-apply-if-no-drift
@@ -49,20 +51,24 @@ jobs:
         uses: ./.github/workflows/reusable-terraform-destroy.yml
         with:
             execution-environment: dev
+        secrets: inherit
 
     terraform-check-resources:
-        needs: terraform-plan-apply-if-no-drift && terraform-destroy
-        run: |
-            terraform show state > state-file.txt
-            cat state-file.txt
+        needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
+        steps:
+            - name: check-resources
+              run: |
+                terraform show state > state-file.txt
+                cat state-file.txt
 
-    terraform-state-artifact:
-        needs: terraform-check-resources
-        uses: actions/upload-artifact@v4
-        with:
-            name: state-file-after-destory
-            path: Environment/Dev/state-file.txt
-            if-no-files-found: error
+            - name: upload-state-artifact
+              uses: actions/upload-artifact@v4
+              with:
+                name: state-file-after-destory
+                path: Environment/Dev/state-file.txt
+                if-no-files-found: error
+              secrets: inherit
+
 
 
     
