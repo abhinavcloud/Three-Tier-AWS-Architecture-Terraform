@@ -49,5 +49,5 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: state-file-after-destory
-                path: Environment/Dev/state-file.txt
+                path: state-file.txt
                 if-no-files-found: error
