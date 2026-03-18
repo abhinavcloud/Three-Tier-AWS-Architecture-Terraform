@@ -40,14 +40,13 @@ jobs:
             - name: terraform-init
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
             - name: check-resources
-              run: |
-                terraform state list > state-file.txt
-                cat state-file.txt
+              run: terraform state list > state-file.txt
+                
              
 
             - name: upload-state-artifact
               uses: actions/upload-artifact@v4
               with:
                 name: state-file-after-destory
-                path: state-file.txt
+                path: ${{vars.TF_ENVIRONMENT}}/state-file.txt
                 if-no-files-found: error
