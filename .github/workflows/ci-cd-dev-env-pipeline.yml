@@ -55,25 +55,7 @@ jobs:
 
     terraform-check-resources:
         needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
-        steps:
-            - name: check-resources
-              run: |
-                terraform show state > state-file.txt
-                cat state-file.txt
-
-            - name: upload-state-artifact
-              uses: actions/upload-artifact@v4
-              with:
-                name: state-file-after-destory
-                path: Environment/Dev/state-file.txt
-                if-no-files-found: error
-              secrets: inherit
-
-
-
-    
-
-
-
-
-
+        uses: ./.github/workflows/reusable-terraform-show-state.yml
+        with:
+            execution-environment: dev
+        secrets: inherit
