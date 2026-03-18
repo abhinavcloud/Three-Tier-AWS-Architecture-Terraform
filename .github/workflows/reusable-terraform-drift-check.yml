@@ -1,8 +1,9 @@
-name: Deployment of AWS Three Tier Architecture
+name: Terraform drift check
 
-description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
+description: This reusable workflow for terraform drift check
 
-on: 
+on:
+
     workflow_call:
 
       inputs:

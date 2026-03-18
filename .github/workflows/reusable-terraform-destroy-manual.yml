@@ -1,6 +1,6 @@
-name: Reusable workflow of Terraform Plan
+name: Manual Terraform destroy
 
-description: This is a reusable workflow designed to initialise terraform and run terraform plan and upload the plan as an artifact
+description: This is a reusable workflow designed to run terrafrom destroy manually
 
 on:
   workflow_dispatch:
