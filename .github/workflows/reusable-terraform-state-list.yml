@@ -41,7 +41,7 @@ jobs:
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
             - name: check-resources
               run: |
-                terraform show list > state-file.txt
+                terraform state list > state-file.txt
                 cat state-file.txt
              
 

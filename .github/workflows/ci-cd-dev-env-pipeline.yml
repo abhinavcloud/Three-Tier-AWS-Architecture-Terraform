@@ -33,7 +33,7 @@ concurrency:
 jobs:
     
     terraform-plan-drift-check:
-        uses: ./.github/workflows/reusable-terraform-plan-drift-check.yml
+        uses: ./.github/workflows/reusable-terraform-drift-check.yml
         with:
             execution-environment: dev
         secrets: inherit
@@ -56,7 +56,7 @@ jobs:
 
     terraform-check-resources:
         needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
-        uses: ./.github/workflows/reusable-terraform-show-state.yml
+        uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
             execution-environment: dev
         secrets: inherit
