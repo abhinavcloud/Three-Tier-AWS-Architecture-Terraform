@@ -9,7 +9,7 @@ on:
           required: true
           type: string
         commit_sha:
-          required: true
+          required: false
           type: string
 
 jobs:
@@ -28,7 +28,7 @@ jobs:
             - name: Checkout-code
               uses: actions/checkout@v4
               with:
-                ref: ${{ inputs.commit_sha}}
+                ref: ${{ inputs.commit_sha || github.sha}}
 
 
             - name: Setup-aws
