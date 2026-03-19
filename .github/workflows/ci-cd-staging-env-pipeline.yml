@@ -1,11 +1,11 @@
-name: Deployment of AWS Three Tier Architecture in Test Environment
+name: Deployment of AWS Three Tier Architecture in Staging  Environment
 
-description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform in Test Environment
+description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform in Staging Environment
 
 on: 
     workflow_run:
         workflows: 
-            - Deployment of AWS Three Tier Architecture in Dev Environment
+            - Deployment of AWS Three Tier Architecture in Test Environment
         types:
             - completed
 
@@ -16,7 +16,7 @@ permissions:
 
 
 concurrency:
-  group: terraform-test
+  group: terraform-staging
   cancel-in-progress: false
 
 
@@ -26,7 +26,7 @@ jobs:
         if: ${{github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'workflow_dispatch'}}
         uses: ./.github/workflows/reusable-terraform-drift-check.yml
         with:
-            execution-environment: test
+            execution-environment: staging
             commit_sha: ${{github.event.workflow_run.head_sha}}
         secrets: inherit
 
@@ -35,7 +35,7 @@ jobs:
         needs: terraform-plan-drift-check
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
-            execution-environment: test
+            execution-environment: staging
             commit_sha: ${{github.event.workflow_run.head_sha}}
         secrets: inherit
 
@@ -44,6 +44,6 @@ jobs:
         needs: [terraform-plan-apply-if-no-drift]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
-            execution-environment: test
+            execution-environment: staging
             commit_sha: ${{github.event.workflow_run.head_sha}}
         secrets: inherit
