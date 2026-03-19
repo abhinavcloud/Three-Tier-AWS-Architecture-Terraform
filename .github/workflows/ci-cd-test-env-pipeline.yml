@@ -1,16 +1,14 @@
-name: Deployment of AWS Three Tier Architecture in Dev Environment
+name: Deployment of AWS Three Tier Architecture in Test Environment
 
 description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
 
 on: 
-#    push:
-#        branches:
-#            - master
-#
-#        paths-ignore:
-#            - Environments/Test/**
-#            - Environments/Staging/**
-#            - Environments/Production/**
+    workflow_run:
+        workflows: 
+            - Deployment of AWS Three Tier Architecture in Dev Environment
+        types:
+            - completed
+
 
     workflow_dispatch:
         inputs:
@@ -26,7 +24,7 @@ permissions:
 
 
 concurrency:
-  group: terraform-dev
+  group: terraform-test
   cancel-in-progress: false
 
 
@@ -35,7 +33,7 @@ jobs:
     terraform-plan-drift-check:
         uses: ./.github/workflows/reusable-terraform-drift-check.yml
         with:
-            execution-environment: dev
+            execution-environment: test
         secrets: inherit
 
     terraform-plan-apply-if-no-drift:
@@ -43,7 +41,7 @@ jobs:
         if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
-            execution-environment: dev
+            execution-environment: test
         secrets: inherit
 
     terraform-destroy:
@@ -51,12 +49,12 @@ jobs:
         if: ${{needs.terraform-plan-apply-if-no-drift.result == 'success' && ( (github.event_name == 'workflow_dispatch' && inputs.perform-destroy) || (github.event_name == 'push' && contains(github.event.head_commit.message, 'destroy')) ) }}
         uses: ./.github/workflows/reusable-terraform-destroy.yml
         with:
-            execution-environment: dev
+            execution-environment: test
         secrets: inherit
 
     terraform-check-resources:
         needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
-            execution-environment: dev
+            execution-environment: test
         secrets: inherit
