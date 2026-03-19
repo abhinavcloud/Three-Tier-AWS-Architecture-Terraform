@@ -1,4 +1,4 @@
-name: Reusable Terraform Destroy
+name: Manual Terraform State List
 
 description: This is a reusable workflow designed to initialise terraform and run terraform destory
 on:
