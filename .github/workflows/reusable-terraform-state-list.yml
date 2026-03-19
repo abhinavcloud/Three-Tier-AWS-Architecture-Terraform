@@ -1,4 +1,4 @@
-name: Terraform state list
+name: Reusable Terraform state list
 
 description: This is a reusable workflow designed to initialise terraform and run terraform state list
 on:

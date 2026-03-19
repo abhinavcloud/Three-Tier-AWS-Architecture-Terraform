@@ -1,4 +1,4 @@
-name: Terraform drift check
+name: Reusable Terraform drift check
 
 description: This reusable workflow for terraform drift check
 
