@@ -39,9 +39,8 @@ jobs:
         secrets: inherit
 
     terraform-plan-apply-if-no-drift:
-        if: ${{github.event.workflow_run.conclusion == 'success'}}
+        if: ${{github.event.workflow_run.conclusion == 'success' && needs.terraform-plan-drift-check.outputs.drift-check == '0' }}
         needs: terraform-plan-drift-check
-        if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
             execution-environment: test
@@ -59,7 +58,7 @@ jobs:
 
     terraform-check-resources:
         if: ${{github.event.workflow_run.conclusion == 'success'}}
-        needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
+        needs: [terraform-plan-apply-if-no-drift]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
             execution-environment: test

@@ -13,11 +13,11 @@ on:
 #            - Environments/Production/**
 
     workflow_dispatch:
-        inputs:
-            perform-destroy:
-                required: true
-                type: boolean
-                description: "Run terraform destroy after successful apply if user approves"
+ #       inputs:
+ #           perform-destroy:
+ #               required: true
+ #               type: boolean
+ #               description: "Run terraform destroy after successful apply if user approves"
 
 permissions:
   id-token: write
@@ -56,7 +56,7 @@ jobs:
         secrets: inherit
 
     terraform-check-resources:
-        needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
+        needs: [terraform-plan-apply-if-no-drift]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
             execution-environment: dev

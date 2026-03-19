@@ -34,7 +34,7 @@ jobs:
         steps:
 
             - name: Checkout-code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup-aws
               uses: aws-actions/configure-aws-credentials@v4
@@ -48,7 +48,7 @@ jobs:
                 terraform_version: ">= 1.13.0"
 
             - name: terraform-init
-              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl -migrate-state
+              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl
 
             - name: terraform-state-list
               run: terraform state list >> terraform-state.txt

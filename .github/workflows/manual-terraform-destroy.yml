@@ -16,7 +16,7 @@ on:
             - test
             - staging
             - production
-          confirm: 
+        confirm: 
             description: "Type DESTROY to confirm"
 
         
@@ -37,10 +37,12 @@ jobs:
           run:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
+        if: ${{inputs.confirm == 'DESTROY' && inputs.execution-environment != '' }}
+
         steps:
 
             - name: Checkout-code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Setup-aws
               uses: aws-actions/configure-aws-credentials@v4
@@ -54,7 +56,7 @@ jobs:
                 terraform_version: ">= 1.13.0"
 
             - name: terraform-init
-              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl
 
             - name: terraform-destroy
               run: terraform destroy -auto-approve

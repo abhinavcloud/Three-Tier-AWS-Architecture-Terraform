@@ -44,7 +44,7 @@ jobs:
 
       steps:
             - name: Checkout-code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
               with:
                 ref: ${{ inputs.commit_sha || github.sha}}
  
@@ -60,7 +60,7 @@ jobs:
                 terraform_version: ">= 1.13.0"
 
             - name: terraform-init
-              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl -migrate-state
+              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl
             
             
             - name: terraform-plan-drift-check
@@ -100,6 +100,6 @@ jobs:
               with:
                 title: "Terraform Drift Detected on ${{inputs.execution-environment}} Environment"
                 content-filepath: ${{ vars.TF_ENVIRONMENT }}/drift-tfplan.md
-                labels: drift, dev-environment
+                labels: drift, ${{inputs.execution-environment}}-environment
 
 
