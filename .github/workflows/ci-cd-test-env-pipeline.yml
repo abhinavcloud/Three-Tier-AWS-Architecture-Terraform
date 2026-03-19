@@ -31,7 +31,7 @@ concurrency:
 jobs:
     
     terraform-plan-drift-check:
-        if: ${{github.event.workflow_run.conclusion == 'success'}}
+        if: ${{github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'workflow_dispatch'}}
         uses: ./.github/workflows/reusable-terraform-drift-check.yml
         with:
             execution-environment: test
@@ -39,7 +39,7 @@ jobs:
         secrets: inherit
 
     terraform-plan-apply-if-no-drift:
-        if: ${{github.event.workflow_run.conclusion == 'success' && needs.terraform-plan-drift-check.outputs.drift-check == '0' }}
+        if: ${{github.event.workflow_run.conclusion == 'success' && needs.terraform-plan-drift-check.outputs.drift-check == '0'  }}
         needs: terraform-plan-drift-check
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
@@ -57,7 +57,7 @@ jobs:
 #       secrets: inherit
 
     terraform-check-resources:
-        if: ${{github.event.workflow_run.conclusion == 'success'}}
+        if: ${{github.event.workflow_run.conclusion == 'success'  }}
         needs: [terraform-plan-apply-if-no-drift]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
