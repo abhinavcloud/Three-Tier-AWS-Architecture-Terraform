@@ -3,14 +3,14 @@ name: Deployment of AWS Three Tier Architecture in Dev Environment
 description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
 
 on: 
-#    push:
-#        branches:
-#            - master
-#
-#        paths-ignore:
-#            - Environments/Test/**
-#            - Environments/Staging/**
-#            - Environments/Production/**
+    push:
+        branches:
+            - master
+
+        paths-ignore:
+            - Environments/Test/**
+            - Environments/Staging/**
+            - Environments/Production/**
 
     workflow_dispatch:
  #       inputs:
@@ -41,7 +41,7 @@ jobs:
 
     terraform-plan-apply-if-no-drift:
         needs: terraform-plan-drift-check
-        if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
+        if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0' && github.event_name == 'workflow_dispatch'}}
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
         with:
             execution-environment: dev
