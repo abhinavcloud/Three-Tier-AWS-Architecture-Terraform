@@ -15,8 +15,8 @@ Disclaimer: This file in is original form doesn't not contain any sensitive data
 The values are specific to the deployed infrastructure.
 */
 
-Environment   = "ProdEnv"
-Application   = "ProdApp"
+Environment   = "prodenv"
+Application   = "prodapp"
 vpc_cidr      = "10.1.0.0/16"
 instance_type = "t2.micro"
 allowed_ports = [443]

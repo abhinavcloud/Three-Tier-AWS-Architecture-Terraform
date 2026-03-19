@@ -15,8 +15,8 @@ Disclaimer: This file in is original form doesn't not contain any sensitive data
 The values are specific to the deployed infrastructure.
 */
 
-Environment   = "TestEnv"
-Application   = "TestApp"
+Environment   = "testenv"
+Application   = "testapp"
 vpc_cidr      = "10.1.0.0/16"
 instance_type = "t2.micro"
 allowed_ports = [22, 80, 443]
