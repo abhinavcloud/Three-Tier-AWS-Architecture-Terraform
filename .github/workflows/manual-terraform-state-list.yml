@@ -2,12 +2,13 @@ name: Manual Terraform State List
 
 description: This is a reusable workflow designed to initialise terraform and run terraform destory
 on:
-  workflow_call:
+  workflow_dispatch:
 
     inputs:
         execution-environment:
           required: true
           type: string
+          default: dev
 
 jobs:
     terraform-destroy-reusable:
