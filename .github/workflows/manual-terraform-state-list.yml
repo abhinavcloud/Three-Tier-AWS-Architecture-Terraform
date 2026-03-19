@@ -1,0 +1,43 @@
+name: Reusable Terraform Destroy
+
+description: This is a reusable workflow designed to initialise terraform and run terraform destory
+on:
+  workflow_call:
+
+    inputs:
+        execution-environment:
+          required: true
+          type: string
+
+jobs:
+    terraform-destroy-reusable:
+        runs-on: ubuntu-latest
+
+        environment: ${{inputs.execution-environment}}
+        
+
+        defaults:
+          run:
+            working-directory: ${{vars.TF_ENVIRONMENT}}
+
+        steps:
+
+            - name: Checkout-code
+              uses: actions/checkout@v3
+
+            - name: Setup-aws
+              uses: aws-actions/configure-aws-credentials@v4
+              with:
+                role-to-assume: ${{secrets.AWS_ARN}}
+                aws-region: ap-south-1
+            
+            - name: setup-terraform
+              uses: hashicorp/setup-terraform@v4
+              with:
+                terraform_version: ">= 1.13.0"
+
+            - name: terraform-init
+              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+
+            - name: terraform-destroy
+              run: terraform state list

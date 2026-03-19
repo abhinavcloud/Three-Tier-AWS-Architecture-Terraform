@@ -3,14 +3,14 @@ name: Deployment of AWS Three Tier Architecture
 description: This deployment pipeline is used for deployment of AWS Three Tier Architecture via Terraform i Development Environment
 
 on: 
-    #push:
-    #    branches:
-    #        - master
-
-    #    paths-ignore:
-    #        - Environments/Test/**
-    #        - Environments/Staging/**
-    #        - Environments/Production/**
+#    push:
+#        branches:
+#            - master
+#
+#        paths-ignore:
+#            - Environments/Test/**
+#            - Environments/Staging/**
+#            - Environments/Production/**
 
     workflow_dispatch:
         inputs:
