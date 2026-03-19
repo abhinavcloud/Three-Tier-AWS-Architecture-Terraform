@@ -46,7 +46,7 @@ jobs:
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
 
             - name: terraform-state-list
-              run: terraform state list > terraform-state.txt
+              run: terraform state list >> terraform-state.txt
 
             - name: upload-state-list
               uses: actions/upload-artifact@v4
