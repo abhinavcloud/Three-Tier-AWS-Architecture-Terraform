@@ -5,11 +5,21 @@ description: This is a reusable workflow designed to run terrafrom destroy manua
 on:
   workflow_dispatch:
 
+
     inputs:
         execution-environment:
           required: true
-          type: string
+          type: choice
           default: dev
+          options:
+            - dev
+            - test
+            - staging
+            - production
+          confirm: 
+            description: "Type DESTROY to confirm"
+
+        
 
 permissions:
   id-token: write

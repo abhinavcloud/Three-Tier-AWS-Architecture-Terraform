@@ -47,12 +47,12 @@ jobs:
             execution-environment: dev
         secrets: inherit
 
-    terraform-destroy:
-        needs: terraform-plan-apply-if-no-drift
-        if: ${{needs.terraform-plan-apply-if-no-drift.result == 'success' && ( (github.event_name == 'workflow_dispatch' && inputs.perform-destroy) || (github.event_name == 'push' && contains(github.event.head_commit.message, 'destroy')) ) }}
-        uses: ./.github/workflows/reusable-terraform-destroy.yml
-        with:
-            execution-environment: dev
+#    terraform-destroy:
+#        needs: terraform-plan-apply-if-no-drift
+#        if: ${{needs.terraform-plan-apply-if-no-drift.result == 'success' && ( (github.event_name == 'workflow_dispatch' && inputs.perform-destroy) || (github.event_name == 'push' && contains(github.event.head_commit.message, 'destroy')) ) }}
+#        uses: ./.github/workflows/reusable-terraform-destroy.yml
+#        with:
+#            execution-environment: dev
         secrets: inherit
 
     terraform-check-resources:

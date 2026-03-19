@@ -60,7 +60,7 @@ jobs:
                 terraform_version: ">= 1.13.0"
 
             - name: terraform-init
-              run: terraform init -backend-config=dev_backend.hcl -migrate-state
+              run: terraform init -backend-config=${{inputs.execution-environment}}_backend.hcl -migrate-state
             
             
             - name: terraform-plan-drift-check
@@ -98,7 +98,7 @@ jobs:
               if: ${{steps.drift-check.outputs.exitcode == '2'}}
               uses: peter-evans/create-issue-from-file@v5
               with:
-                title: "Terraform Drift Detected on Dev Environment"
+                title: "Terraform Drift Detected on ${{inputs.execution-environment}} Environment"
                 content-filepath: ${{ vars.TF_ENVIRONMENT }}/drift-tfplan.md
                 labels: drift, dev-environment
 

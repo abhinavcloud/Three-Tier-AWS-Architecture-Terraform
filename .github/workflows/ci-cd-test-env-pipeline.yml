@@ -10,12 +10,12 @@ on:
             - completed
 
 
-    workflow_dispatch:
-        inputs:
-            perform-destroy:
-                required: true
-                type: boolean
-                description: "Run terraform destroy after successful apply if user approves"
+#    workflow_dispatch:
+#        inputs:
+#            perform-destroy:
+#                required: true
+#                type: boolean
+#                description: "Run terraform destroy after successful apply if user approves"
 
 permissions:
   id-token: write
@@ -39,6 +39,7 @@ jobs:
         secrets: inherit
 
     terraform-plan-apply-if-no-drift:
+        if: ${{github.event.workflow_run.conclusion == 'success'}}
         needs: terraform-plan-drift-check
         if: ${{needs.terraform-plan-drift-check.outputs.drift-check == '0'}}
         uses: ./.github/workflows/reusable-terraform-plan-apply.yml
@@ -47,16 +48,17 @@ jobs:
             commit_sha: ${{github.event.workflow_run.head_sha}}
         secrets: inherit
 
-    terraform-destroy:
-        needs: terraform-plan-apply-if-no-drift
-        if: ${{needs.terraform-plan-apply-if-no-drift.result == 'success' && ( (github.event_name == 'workflow_dispatch' && inputs.perform-destroy) || (github.event_name == 'push' && contains(github.event.head_commit.message, 'destroy')) ) }}
-        uses: ./.github/workflows/reusable-terraform-destroy.yml
-        with:
-            execution-environment: test
-            commit_sha: ${{github.event.workflow_run.head_sha}}
+#    terraform-destroy:
+#        needs: terraform-plan-apply-if-no-drift
+#        if: ${{needs.terraform-plan-apply-if-no-drift.result == 'success' && ( (github.event_name == 'workflow_dispatch' && inputs.perform-destroy) || (github.event_name == 'push' && contains(github.event.head_commit.message, 'destroy')) ) }}
+#        uses: ./.github/workflows/reusable-terraform-destroy.yml
+#        with:
+#            execution-environment: test
+#            commit_sha: ${{github.event.workflow_run.head_sha}}
         secrets: inherit
 
     terraform-check-resources:
+        if: ${{github.event.workflow_run.conclusion == 'success'}}
         needs: [terraform-plan-apply-if-no-drift, terraform-destroy]
         uses: ./.github/workflows/reusable-terraform-state-list.yml
         with:
