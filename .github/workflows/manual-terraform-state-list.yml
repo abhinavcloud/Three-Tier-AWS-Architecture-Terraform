@@ -10,8 +10,13 @@ on:
           type: string
           default: dev
 
+permissions:
+  id-token: write
+  contents: read
+  issues: write
+
 jobs:
-    terraform-destroy-reusable:
+    manual-terraform-stae-list:
         runs-on: ubuntu-latest
 
         environment: ${{inputs.execution-environment}}
