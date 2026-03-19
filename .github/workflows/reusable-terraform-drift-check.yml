@@ -10,6 +10,9 @@ on:
         execution-environment:
           required: true
           type: string
+        commit_sha:
+          required: true
+          type: string
 
       outputs:
         drift-check:
@@ -42,7 +45,8 @@ jobs:
       steps:
             - name: Checkout-code
               uses: actions/checkout@v3
-
+              with:
+                ref: ${{ inputs.commit_sha}}
  
             - name: Setup-aws
               uses: aws-actions/configure-aws-credentials@v4
