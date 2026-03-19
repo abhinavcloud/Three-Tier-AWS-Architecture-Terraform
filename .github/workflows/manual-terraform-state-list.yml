@@ -45,5 +45,5 @@ jobs:
             - name: terraform-init
               run: terraform init -backend-config=dev_backend.hcl -migrate-state
 
-            - name: terraform-destroy
+            - name: terraform-state-list
               run: terraform state list

@@ -17,7 +17,7 @@ permissions:
   issues: write
 
 jobs:
-    terraform-destroy-manual:
+    manual-terraform-destroy:
         runs-on: ubuntu-latest
 
         environment: ${{inputs.execution-environment}}
