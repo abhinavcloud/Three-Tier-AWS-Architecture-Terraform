@@ -57,7 +57,7 @@ jobs:
                 echo "WEBSITE URL IS ${{needs.terraform-plan-apply-if-no-drift.outputs.WEBSITE_URL}}"
                 echo "WEBSITE URL IS ${{needs.terraform-plan-apply-if-no-drift.outputs.WEBSITE_URL}}" > website_url.txt
 
-            - name: upload-website-uel
+            - name: upload-website-url
               uses: actions/upload-artifact@v4
               with:
                 name: WEBSITE_URL
