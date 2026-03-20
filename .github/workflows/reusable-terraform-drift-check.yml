@@ -43,7 +43,7 @@ jobs:
         drift-check: ${{steps.drift-check.outputs.exitcode}}
 
       env:
-        TF_VAR_Environment   = ${{vars.TF_ENVIRONMENT}}
+        TF_VAR_Environment   = ${{vars.TF_ENV}}
         TF_VAR_Application   = ${{vars.TF_APPLICATION}}
         TF_VAR_vpc_cidr      = ${{vars.TF_VPC_CIDR}}  
         TF_VAR_instance_type = ${{vars.TF_INSTANCE_TYPE}}

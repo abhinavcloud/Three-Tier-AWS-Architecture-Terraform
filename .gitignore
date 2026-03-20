@@ -5,11 +5,13 @@
 **/*.tfstate.*
 **/crash.log
 **/crash.*
+**/*.tfvars
 
 # ============================================================
 # Terraform Local Working Directory (recursive)
 # ============================================================
 **/.terraform/
+
 
 # Backup and auto-generated files
 **/*.backup
