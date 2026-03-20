@@ -24,6 +24,14 @@ jobs:
           run:
             working-directory: ${{vars.TF_ENVIRONMENT}}
 
+        env:
+          TF_VAR_Environment   = ${{vars.TF_ENVIRONMENT}}
+          TF_VAR_Application   = ${{vars.TF_APPLICATION}}
+          TF_VAR_vpc_cidr      = ${{vars.TF_VPC_CIDR}}  
+          TF_VAR_instance_type = ${{vars.TF_INSTANCE_TYPE}}
+          TF_VAR_allowed_ports = ${{vars.TF_ALLOWED_PORTS}}
+          TF_VAR_cidr_blocks   = ${{var.TF_CIDR_BLOCKS}}
+
         steps:
 
             - name: Checkout-code
