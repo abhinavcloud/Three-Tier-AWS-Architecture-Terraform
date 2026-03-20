@@ -13,6 +13,11 @@ on:
           required: false
           type: string
 
+    outputs:
+      WEBSITE_URL:
+        value: ${{jobs.terraform-plan-apply-reusable.outptus.WEBSITE_URL}}
+      
+
 jobs:
     terraform-plan-apply-reusable:
         runs-on: ubuntu-latest
@@ -31,6 +36,9 @@ jobs:
           TF_VAR_instance_type: ${{vars.TF_INSTANCE_TYPE}}
           TF_VAR_allowed_ports: ${{vars.TF_ALLOWED_PORTS}}
           TF_VAR_cidr_blocks: ${{vars.TF_CIDR_BLOCKS}}
+
+        outputs:
+          WEBSITE_URL: ${{steps.terraform-output.WEBSITE_URL}}
 
         steps:
 
@@ -71,4 +79,10 @@ jobs:
             - name: terraform-apply
               id: terraform-apply
               run: terraform apply tfplan 
+
+            - name: terraform-capture-output
+              id: terraform-output
+              run: |
+                terraform output -json > tf_outputs.json
+                echo "WEBSITE_URL=$(jq -r '.Public_ALB_DNS_Name.value')" >> $GITHUB_OUTPUT
 
