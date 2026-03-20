@@ -61,5 +61,5 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                 name: WEBSITE_URL
-                path: ${{ vars.TF_ENVIRONMENT }}/ website_url.txt
+                path: ${{ vars.TF_ENVIRONMENT }}/website_url.txt
                 if-no-files-found: error
