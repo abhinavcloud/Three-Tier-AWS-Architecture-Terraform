@@ -84,16 +84,6 @@ Environments
 - 3. App EC2 reads/writes tasks.json stored inside S3.
 - 4. All S3 traffic stays inside VPC.
 
-## Deployment Steps
-- 1. Naviagate to the specific environment folder -> cd Environment/Dev
-- 2. Go through the init.sh, terraform.tfvars, terraform.tf, backend.hcl
-- 3. Make the neccessary changes according to your cloud, state and secret provider
-- 4. Make init.sh executable -> chmod +x init.sh
-- 5. Run init.sh -> ./init.sh
-- 6. Run -> terraform validate
-- 7. Run -> terraform plan
-- 8. Run -> terraform apply
-- 9. Option, for infrastructre destruction, run -> terraform destroy
 
 ## Final Output:
     Public ALB DNS Name for accessing the application
